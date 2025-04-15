@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Hero() {
     return (
-        <section className="text-center py-20 px-4 bg-gradient-to-br from-blue-50 to-white">
+        <section className="text-center py-20 px-4 bg-blue-50">
             <motion.h1 
               className="text-4xl text-gray-900 md:text-5xl font-bold mb-4"
               initial={{ opacity: 0, y: 40 }}
