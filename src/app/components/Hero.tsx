@@ -12,7 +12,7 @@ export default function Hero() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-                Download YouTube Videos Instantly
+                Download <span className="text-red-500">YouTube</span> Videos Instantly
             </motion.h1>
             <motion.p 
               className="text-gray-600 text-lg"
@@ -24,14 +24,14 @@ export default function Hero() {
             </motion.p>
             
             {/* CTA Button */}
-            <motion.button
+            {/*<motion.button
               className="px-6 py-3 md:px-9 bg-red-700 hover:bg-red-600 text-[#fff] rounded-lg mt-6"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
                 <Link href="#download">Download Now</Link>
-            </motion.button>
+            </motion.button>*/}
         </section>
     )
 }

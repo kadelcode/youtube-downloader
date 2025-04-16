@@ -1,45 +1,25 @@
 // app/api/metadata/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import ytdl from 'ytdl-core';
 
-export const runtime = 'nodejs'; // Ensure compatibility with ytdl-core
-
 export async function GET(req: NextRequest) {
+  const url = req.nextUrl.searchParams.get('url');
+  
+  if (!url || !ytdl.validateURL(url)) {
+    return NextResponse.json({ error: 'Invalid YouTube URL' }, { status: 400 });
+  }
+
   try {
-    const videoURL = req.nextUrl.searchParams.get('url');
-
-    if (!videoURL || !ytdl.validateURL(videoURL)) {
-      return NextResponse.json({ error: 'Invalid YouTube URL' }, { status: 400 });
-    }
-
-    const info = await ytdl.getInfo(videoURL);
-
-    const { videoDetails, formats } = info;
-
-    const videoDetailsResponse = {
-      title: videoDetails.title,
-      author: videoDetails.author.name,
-      uploadDate: videoDetails.uploadDate,
-      views: videoDetails.viewCount,
-      lengthSeconds: videoDetails.lengthSeconds,
-      thumbnail: videoDetails.thumbnails[videoDetails.thumbnails.length - 1]?.url || null,
-      formats: formats
-        .filter(f => f.container === 'mp4' && f.hasVideo && f.hasAudio)
-        .map(f => ({
-          quality: f.qualityLabel,
-          itag: f.itag,
-        })),
+    const info = await ytdl.getInfo(url);
+    const metadata = {
+      title: info.videoDetails.title,
+      lengthSeconds: info.videoDetails.lengthSeconds,
+      author: info.videoDetails.author.name,
+      thumbnail: info.videoDetails.thumbnails.pop(),
     };
 
-    return NextResponse.json(videoDetailsResponse);
-  } catch (error: unknown) {
-    const errorMessage = 'Failed to fetch video metadata';
-
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Metadata fetch error:', error);
-    }
-
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    return NextResponse.json(metadata);
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch metadata' }, { status: 500 });
   }
 }

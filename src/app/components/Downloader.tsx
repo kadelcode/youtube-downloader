@@ -112,15 +112,15 @@ export default function Downloader() {
     };
 
     return (
-        <main id='download' className='flex flex-col items-center justify-center p-8 bg-blue-50 text-gray-900'>
+        <main id='download' className='flex flex-col items-center justify-center p-10 bg-blue-50 text-gray-900'>
             <motion.div 
-              className="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-xl"
+              className="w-full max-w-2xl bg-white p-6 rounded-2xl border-2 border-blue-200"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
                 <motion.h1
-                  className='text-2xl font-bold text-center mb-4'
+                  className='text-2xl font-bold text-center mb-6'
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
@@ -142,7 +142,7 @@ export default function Downloader() {
                       onChange={(e) => setUrl(e.target.value)} // Update the URL state when the input changes.
                     />
                     <button
-                      className="bg-blue-600 text-white px-4 py-2 rounded-xl"
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl"
                       onClick={fetchMetadata} // Call fetchMetadata when the button is clicked.
                       disabled={loading} // Disable the button when loading.
                     >
