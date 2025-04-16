@@ -1,6 +1,8 @@
 // This directive is used in Next.js to indicate that the file contains client-side code
 "use client";
 
+import Image from 'next/image';
+
 // Import motion for animation effects
 import { motion } from 'framer-motion';
 
@@ -10,6 +12,18 @@ import { useState } from 'react';
 
 // Defining the Downloader component as the default export
 export default function Downloader() {
+
+    interface VideoFormat {
+        itag: string;
+        quality: string;
+    }
+
+    interface VideoMetadata {
+        title: string;
+        thumbnail: string
+        lengthSeconds: number;
+        formats: VideoFormat[];
+    }
     // State to store the YouTube URL entered by the user.
     const [url, setUrl] = useState('');
 
@@ -17,7 +31,7 @@ export default function Downloader() {
     const [loading, setLoading] = useState(false);
 
     // State to manage the fetched video metadata.
-    const [video, setVideo] = useState<any>(null);
+    const [video, setVideo] = useState<VideoMetadata | null>(null);
 
     // State to store the selected format itag.
     const [formatItag, setFormatItag] = useState<string | null>(null);
@@ -41,8 +55,12 @@ export default function Downloader() {
             const data = await res.json(); // Parse the JSON response.
             setVideo(data); // Set the video data.
             setFormatItag(data.formats[0].itag); // Set the default format itag.
-        } catch (err: any) {
-            setError(err.message); // Set the error message if an error occurs.
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message); // Set the error message if an error occurs.
+            } else {
+                setError('An unknow error occurred')
+            }
         } finally {
             setLoading(false); // Set loading to false after the fetch is complete.
         }
@@ -81,8 +99,12 @@ export default function Downloader() {
 
             // Remove the anchor element from the DOM.
             a.remove();
-        } catch (err: any) {
-            setError(err.message); // Set the error message if an error occurs.
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message); // Set the error message if an error occurs.
+            } else {
+                setError('An unknown error occurred')
+            }
         } finally {
             setLoading(false); // Set loading to false after the download is complete
         }
@@ -138,7 +160,13 @@ export default function Downloader() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6 }}
                     >
-                        <img src={video.thumbnail} alt='Thumbnail' className='rounded-xl mx-auto mb-2' />
+                        <Image
+                          src={video.thumbnail} 
+                          alt='Thumbnail' 
+                          layout="fill"
+                          objectFit="cover"
+                          className='rounded-xl mx-auto mb-2' 
+                        />
                         <p className='font-semibold'>{video.title}</p>
                         <p className='text-sm text-gray-500 mb-2'>{Math.floor(video.lengthSeconds / 60)} min</p>
                     
