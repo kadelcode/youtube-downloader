@@ -175,7 +175,7 @@ export default function Downloader() {
                           value={formatItag!}
                           onChange={(e) => setFormatItag(e.target.value)}
                         >
-                            {video.formats.map((f: any) => (
+                            {video.formats.map((f) => (
                                 <option key={f.itag} value={f.itag}>
                                     {f.quality}
                                 </option>
