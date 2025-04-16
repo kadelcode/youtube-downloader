@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(metadata);
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Failed to fetch metadata' }, { status: 500 });
   }
 }
