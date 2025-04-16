@@ -31,8 +31,17 @@ export async function GET(req: NextRequest) {
         'Content-Disposition': `attachment; filename="video.mp4"`,
       },
     });
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message }), {
+  } catch (err: unknown) {
+    let errorMessage = 'Failed to download video';
+
+    if (err instanceof Error) {
+      errorMessage = err.message;
+      console.error('Download error:', err.message);
+    } else {
+      console.error('Unknown error:', err);
+    }
+
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
