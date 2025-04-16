@@ -1,8 +1,7 @@
-// /app/api/download/route.ts
-export const runtime = 'nodejs'; // Again, very important for ytdl-core
-
 import { NextRequest } from 'next/server';
 import ytdl from 'ytdl-core';
+
+export const runtime = 'nodejs';
 
 export async function GET(req: NextRequest) {
   const videoURL = req.nextUrl.searchParams.get('url');
@@ -23,12 +22,26 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const stream = ytdl(videoURL, { quality: Number(itag) });
+    const nodeStream = ytdl(videoURL, { quality: Number(itag) });
 
-    return new Response(stream as any, {
+    // Convert Node.js Readable stream to a Web-compatible ReadableStream
+    const webStream = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of nodeStream) {
+          controller.enqueue(new Uint8Array(chunk));
+        }
+        controller.close();
+      },
+      cancel(reason) {
+        console.log('Stream cancelled', reason);
+        nodeStream.destroy();
+      },
+    });
+
+    return new Response(webStream, {
       headers: {
         'Content-Type': 'video/mp4',
-        'Content-Disposition': `attachment; filename="video.mp4"`,
+        'Content-Disposition': 'attachment; filename="video.mp4"',
       },
     });
   } catch (err: unknown) {
