@@ -25,7 +25,7 @@ export default function FAQ() {
                 {faqs.map((faq, i) => (
                     <motion.div 
                       key={i} 
-                      className="border-b pb-4"
+                      className="border-b border-gray-300 pb-4"
                       initial={{ opacity: 0, y: 40 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: i * 0.2 }}
