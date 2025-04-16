@@ -30,14 +30,14 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(videoDetails);
   } catch (error: unknown) {
-    let errorMessage = 'Failed to fetch metadata';
+        const errorMessage = 'Failed to fetch metadata';
 
-    if (error instanceof Error) {
-        console.error('Metadata fetch error:', error);
-    } else {
-        console.error('Unknown error:', error);
-    }
+        if (error instanceof Error) {
+            console.error('Metadata fetch error:', error);
+        } else {
+            console.error('Unknown error:', error);
+        }
 
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
